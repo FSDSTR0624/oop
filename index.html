@@ -3,10 +3,160 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      li.engineStarted:after {
+        content: "💨";
+      }
+    </style>
   </head>
   <body>
     <ul id="lanes"></ul>
-    <script></script>
+    <script>
+      class Car {
+        constructor(ico) {
+          this.ico = ico;
+          this.doors = 4;
+          this.kms = 0;
+          this.fuel = 100;
+          this.speed = 0;
+          this.openedTrunk = false;
+          this.engineStarted = false;
+        }
+
+        startEngine() {
+          this.engineStarted = true;
+          redraw();
+        }
+
+        stopEngine() {
+          this.speed = 0;
+          this.engineStarted = false;
+          redraw();
+        }
+
+        refuel() {
+          console.log("refuel", this.engineStarted);
+          if (this.engineStarted == false) {
+            this.fuel = 100;
+            redraw();
+          } else {
+            console.warn("El coche está en marcha");
+          }
+        }
+
+        accelerate(speed) {
+          if (this.engineStarted == true) {
+            /* condición sin formato ternario
+            if (this.speed + speed > 0) {
+              this.speed += speed;
+            } else {
+              this.speed = 0;
+            }
+              */
+
+            /* Comparación ternaria: la siguiente línea es lo mismo que lo que hemos comentado en la parte superior */
+
+            this.speed = this.speed + speed > 0 ? (this.speed += speed) : 0;
+
+            if (this.fuel - 20 < 0) {
+              this.fuel = 0;
+              this.speed = 0;
+              this.engineStarted = false;
+            } else if (speed > 0) {
+              this.fuel -= 20;
+            }
+
+            redraw();
+          } else {
+            console.error("El coche " + this.ico + " está parado");
+          }
+        }
+      }
+
+      let cars = [];
+
+      carIcons = ["🚐", "🚗", "🚙", "🛻", "🏎️", "🛵", "🛺", "🚲"];
+
+      /* forma tradicional de escribir una función
+      carIcons.map(function (carIcon) {
+        cars.push(new Car(carIcon));
+      });*/
+
+      /* escribiendo arrow functions */
+      carIcons.map((carIcon) => {
+        cars.push(new Car(carIcon));
+      });
+
+      /* Son muy útiles cuando tenemos que devolver algo en una función */
+
+      const ages = [16, 28, 76, 54, 94, 17, 8, 34];
+      let onlyAdults = ages.filter((age) => age > 18);
+
+      /* es lo mismo que */
+
+      onlyAdults = ages.filter(function (age) {
+        return age > 18;
+      });
+
+      const lanes = document.getElementById("lanes");
+
+      function redraw() {
+        lanes.innerHTML = "";
+        cars.map(function (car) {
+          let listItem = document.createElement("li");
+          listItem.textContent =
+            "speed: " + car.speed + "kms/h fuel: " + car.fuel + "% " + car.ico;
+          if (car.engineStarted == true)
+            listItem.classList.add("engineStarted");
+
+          const refuelButton = document.createElement("button");
+          refuelButton.textContent = "Refuel";
+          refuelButton.addEventListener("click", function (event) {
+            car.refuel();
+          });
+          listItem.prepend(refuelButton);
+
+          const decelerate20Button = document.createElement("button");
+          decelerate20Button.textContent = "Dec 20";
+          decelerate20Button.addEventListener("click", function (event) {
+            car.accelerate(-20);
+          });
+          listItem.prepend(decelerate20Button);
+
+          const accelerate40Button = document.createElement("button");
+          accelerate40Button.textContent = "Acc 40";
+          accelerate40Button.addEventListener("click", function (event) {
+            car.accelerate(40);
+          });
+          listItem.prepend(accelerate40Button);
+
+          const accelerate20Button = document.createElement("button");
+          accelerate20Button.textContent = "Acc 20";
+          accelerate20Button.addEventListener("click", function (event) {
+            car.accelerate(20);
+          });
+          listItem.prepend(accelerate20Button);
+
+          const stopEngineButton = document.createElement("button");
+          stopEngineButton.textContent = "Stop";
+          stopEngineButton.addEventListener("click", function (event) {
+            car.stopEngine();
+          });
+          listItem.prepend(stopEngineButton);
+
+          const startEngineButton = document.createElement("button");
+          startEngineButton.textContent = "Start";
+          startEngineButton.addEventListener("click", function (event) {
+            car.startEngine();
+          });
+          listItem.prepend(startEngineButton);
+
+          lanes.append(listItem);
+        });
+      }
+
+      redraw();
+    </script>
     <!-- 🚐 🚗 🚙 🛻 🏎️ 🛵 🛺 🚲  -->
     <!-- 💨 ⛽ 🛞 🛑 -->
   </body>
