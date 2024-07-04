@@ -2,43 +2,59 @@
 
 En informática, una clase es una plantilla para la creación de objetos de datos según un modelo predefinido. Las clases se utilizan para representar entidades o conceptos, como los sustantivos en el lenguaje. Cada clase es un modelo que define un conjunto de variables —el estado—, y métodos apropiados para operar con dichos datos —el comportamiento—.
 
-## Class
+## La sintaxis “class”
 
-### Función constructora
-
-### La sintaxis “class”
+Si hemos comentado que una clase es una plantilla para la creación de objetos, entonces podemos definir la clase de la siguiente manera:
 
 ```javascript
-class MyClass {
-  // métodos de clase
-  constructor() { ... }
-  method1() { ... }
-  method2() { ... }
-  method3() { ... }
-  ...
+class Car {
+  color: "red";
 }
 ```
 
-Entonces usamos `new MyClass()` para crear un objeto nuevo con todos los métodos listados.
-
-El método `constructor()` es llamado automáticamente por `new`, así podemos inicializar el objeto allí.
-
-Por ejemplo:
+Entonces usamos `new MyClass()` para crear un objeto nuevo.
 
 ```javascript
-class User {
-  constructor(name) {
-    this.name = name;
-  }
+const car1 = new Car();
+```
 
-  sayHi() {
-    alert(this.name);
+Una vez creado el objeto, podemos acceder a sus propiedades como hemos hecho siempre:
+
+```javascript
+console.log(car1.color);
+```
+
+### constructor
+
+Si por alguna razón queremos definir unas variables dentro de la clase, debemos usar el método `constructor`
+
+```javascript
+class Car {
+  constructor(owner, ico) {
+    this.kms = 0;
+    this.fuel = 100;
+    this.owner = owner;
+    this.ico = ico;
   }
 }
+```
 
-// Uso:
-let user = new User("John");
-user.sayHi();
+### las clases permiten añadir métodos adicionales al objeto
+
+```javascript
+class Car {
+  constructor(owner, ico) {
+    this.kms = 0;
+    this.fuel = 100;
+    this.owner = owner;
+    this.ico = ico;
+    this.openedTrunk = false;
+  }
+
+  openTrunk() {
+    this.openedTrunk = true;
+  }
+}
 ```
 
 Cuando se llama a `new User("John")`:
@@ -52,34 +68,42 @@ Cuando se llama a `new User("John")`:
 > Un tropiezo común en desarrolladores principiantes es poner una coma entre los métodos de clase, lo que resulta en un error de sintaxis.
 > La notación aquí no debe ser confundida con la sintaxis de objeto literal. Dentro de la clase no se requieren comas.
 
-### Getters/setters
+## Getters/setters
 
 Al igual que los objetos literales, las clases pueden incluir getters/setters, propiedades calculadas, etc.
 
 Aquí hay un ejemplo de user.name, implementado usando get/set:
 
 ```javascript
-class User {
-  constructor(name) {
-    // invoca el setter
-    this.name = name;
+class Car {
+  constructor(owner, ico) {
+    this.kms = 0;
+    this.fuel = 100;
+    this.owner = owner;
+    this.ico = ico;
+    this.openedTrunk = false;
   }
 
-  get name() {
-    return this._name;
+  get owner() {
+    return "Mi nombre es " + this._owner;
   }
 
-  set name(value) {
+  // Setter method for the owner property
+  set owner(value) {
     if (value.length < 4) {
       alert("Nombre demasiado corto.");
       return;
     }
-    this._name = value;
+    this._owner = value;
+  }
+
+  openDoor() {
+    this.openedTrunk = true;
   }
 }
 
-let user = new User("John");
-alert(user.name); // John
+let car1 = new Car("Pepe", "🚗");
+alert(car.owner); // Mi nombre es Pepe
 
-user = new User(""); // Nombre demasiado corto.
+car2 = new Car(""); // Nombre demasiado corto.
 ```
